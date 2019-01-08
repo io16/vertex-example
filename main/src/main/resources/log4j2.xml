@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- TODO: Don't forget to set system property -Dlog4j2.contextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector to make all loggers asynchronous. -->
+
+<Configuration status="WARN">
+  <Appenders>
+    <!-- Async Loggers will auto-flush in batches, so switch off immediateFlush. -->
+    <Console name="Console" target="SYSTEM_OUT" immediateFlush="false">
+      <PatternLayout pattern="%d [%t] %level %logger{36} - %msg%n"/>
+    </Console>
+  </Appenders>
+  <Loggers>
+    <Root level="info" includeLocation="false">
+      <AppenderRef ref="Console"/>
+    </Root>
+  </Loggers>
+</Configuration>

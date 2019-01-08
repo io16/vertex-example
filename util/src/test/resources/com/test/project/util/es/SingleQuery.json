@@ -1,0 +1,8 @@
+{
+  "update": {
+    "_index": "{{indexName}}",
+    "_retry_on_conflict": 3,
+    "_type": "{{documentType}}",
+    "_id": "{{documentId}}"
+  }
+}

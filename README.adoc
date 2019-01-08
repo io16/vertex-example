@@ -1,0 +1,87 @@
+= Tahometer Activity service
+
+== Synopsis
+
+A service to receive activity from Tahometer Agent via MQTT and provide Web UI with reporting via HTTP.
+
+== Add to env variables public key
+Execute
+
+`sudo gedit -H /etc/profile`
+
+Add to the end of the file, separate with empty line
+`TAHOMETER_ACTIVITY_COLLECTOR_AUTH_JWT_SECRET="MIGbMBAGByqGSM49AgEGBSuBBAAjA4GGAAQA4fkkvYyTPB/tv3i2y1ERHa0Q/nXu FD5cWjDCTQqOuspsNXEbyhMJXN6WaE/9Jzgpj2C0m8cz7FSuOmyrdfTgsjsBeCOR bdq2fjeyxvtd/bRYEtVbXGRMaAXXSFgYNG6wjgh9NK1T5Qs/Ba/QS2qhe2SYrXzB xXwxY0aQbkYKcvtxGis="`
+
+After that restart your session.
+
+== Quick start - run in Docker
+
+In order to quickly get it up for development purposes use `docker-compose up [--build]`.
+
+== Quick start - run locally
+
+There are at least two ways to build and run it:
+
+`mvn clean test package && java -jar main/target/\*fat*`
+
+or
+
+`mvn clean test install && mvn exec:java -pl main`
+
+== Database local setup
+
+Install timeScale DB v 0.12
+
+You will need to edit your postgresql.conf file to include necessary libraries:
+
+Modify postgresql.conf to uncomment this line and add required libraries.
+
+`shared_preload_libraries = 'timescaledb'`
+
+And then restart postgresql:
+
+`sudo service postgresql restart`
+
+To set up postgres user:
+
+- Run the psql command from the postgres user account:
+
+`sudo -u postgres psql postgres`
+
+- Set the password:
+
+`\password postgres`
+
+- Enter a password.
+
+To set up database follow these commands (from postgres console):
+
+`CREATE database tahometer;`
+
+`\c tahometer;`
+
+For next command you need timescaledb to be installed and added in postgresql.conf (look above).
+
+`CREATE EXTENSION IF NOT EXISTS timescaledb CASCADE;`
+
+`\q`
+
+Then, to fill your newly created data base 'tahometer' with tables and information use dump file `ruby_2018_09_20_2.dump`.
+
+`psql -U postgres -h localhost tahometer < 'path to dump file'`
+
+As this dump is on old ruby tables structure you will need to execute create-tables.sql script, which you can find by path
+`'path to project'/activity/playground/test7/create-tables.sql`
+
+== Development setup
+
+For now, usual Intellij IDEA's "Import existing Maven project" wizard must be enough, then run via `com.tahometer.activity.main.Main` class.
+
+== Staging environment
+
+If you want to update activity microservice then:
+
+  - ssh to the staging server
+  - `cd ~/activity/live/staging`
+  - do `git pull` in order to fetch the latest code
+  - `./start.sh`

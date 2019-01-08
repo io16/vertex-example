@@ -1,0 +1,4 @@
+{"script": "{{query1}}"}
+BULK_REQUEST_DELIMITER
+{"script": "{{ query2 }}", "count": {{number1}}}
+BULK_REQUEST_DELIMITER
